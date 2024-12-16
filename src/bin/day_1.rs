@@ -5,7 +5,7 @@ fn main() {
   let (mut first, mut second): (Vec<_>, Vec<_>) = binding.lines().map(parse_line).unzip();
   let _ = &first.sort();
   let _ = &second.sort();
-  let acc: isize = first.iter().zip(&second).map(|(a, b)| (a-b).abs()).sum();
+  let acc: isize = first.iter().zip(&second).map(|(a, b)| (a - b).abs()).sum();
   dbg!(acc);
 
   //Part 2
@@ -13,7 +13,9 @@ fn main() {
   for num in second {
     counter.entry(num).and_modify(|x| *x += 1).or_insert(1);
   }
-  let acc_2_electric_boogaloo: isize = first.into_iter().fold(0, |acc, num| acc + counter.get(&num).unwrap_or(&0)*num);
+  let acc_2_electric_boogaloo: isize = first
+    .into_iter()
+    .fold(0, |acc, num| acc + counter.get(&num).unwrap_or(&0) * num);
   dbg!(acc_2_electric_boogaloo);
 }
 
