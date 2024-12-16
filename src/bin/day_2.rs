@@ -1,7 +1,7 @@
 use std::{fs, isize};
 
 fn main() {
-  let binding = &fs::read_to_string("./day_2.txt").expect("mlem");
+  let binding = &fs::read_to_string("input/day_2.txt").expect("mlem");
   let reports = binding.lines().map(parse_line).collect::<Vec<Vec<isize>>>();
   let mut salvageable_reports = 0;
   let acc = reports

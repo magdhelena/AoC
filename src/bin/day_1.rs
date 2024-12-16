@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fs};
 
 fn main() {
-  let binding = fs::read_to_string("./day_1.txt").expect("mlem");
+  let binding = fs::read_to_string("input/day_1.txt").expect("mlem");
   let (mut first, mut second): (Vec<_>, Vec<_>) = binding.lines().map(parse_line).unzip();
   let _ = &first.sort();
   let _ = &second.sort();
