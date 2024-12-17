@@ -12,11 +12,15 @@ fn main() {
     .map(|mul| {
       let num1 = mul.get(1).map_or("", |m| m.as_str());
       let num2 = mul.get(2).map_or("", |m| m.as_str());
-      let do_word = mul.get(3).map_or("", |m| m.as_str());
-      let dont_word = mul.get(4).map_or("", |m| m.as_str());
+      let do_word = mul.get(3).is_some();
+      let dont_word = mul.get(4).is_some();
 
-      if !do_word.is_empty() {flag = true};
-      if !dont_word.is_empty() {flag = false};
+      if do_word {
+        flag = true
+      };
+      if dont_word {
+        flag = false
+      };
 
       if flag && !num1.is_empty() && !num2.is_empty() {
         num1.parse::<usize>().unwrap() * num2.parse::<usize>().unwrap()
