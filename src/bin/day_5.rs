@@ -24,22 +24,17 @@ fn main() {
   let result_1: usize = updates
     .iter()
     .filter_map(|line| {
-      let mut middle_page = Some(line[(line.len() - 1) / 2]);
-      for (i, page) in line.iter().enumerate() {
-        let cant_be_before_page = match rules_grouping.get(page) {
-          Some(x) => x,
-          None => {
-            continue;
-          }
-        };
-        if *(&line[..i]
+      if line.iter().enumerate().any(|(i, page)| {
+        let empty_vec = &vec![];
+        let cant_be_before_page = rules_grouping.get(page).unwrap_or(empty_vec);
+        *(&line[..i]
           .iter()
           .any(|other_page| cant_be_before_page.contains(other_page)))
-        {
-          middle_page = None
-        }
+      }) {
+        None
+      } else {
+        Some(line[(line.len() - 1) / 2])
       }
-      middle_page
     })
     .sum();
   dbg!(result_1);
@@ -48,21 +43,13 @@ fn main() {
   let result_2: usize = updates
     .iter()
     .filter(|line| {
-      for (i, page) in line.iter().enumerate() {
-        let cant_be_before_page = match rules_grouping.get(page) {
-          Some(x) => x,
-          None => {
-            continue;
-          }
-        };
-        if *(&line[..i]
+      line.iter().enumerate().any(|(i, page)| {
+        let empty_vec = &vec![];
+        let cant_be_before_page = rules_grouping.get(page).unwrap_or(empty_vec);
+        *(&line[..i]
           .iter()
           .any(|other_page| cant_be_before_page.contains(other_page)))
-        {
-          return true;
-        }
-      }
-      false
+      })
     })
     .map(|wrong_update| {
       let mut new_update: Vec<usize> = vec![];
