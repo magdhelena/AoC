@@ -16,11 +16,15 @@ fn main() {
   }
 
   let updates_binding = fs::read_to_string("input/day_5_updates.txt").expect("mlem");
-  let updates = updates_binding.lines().map(parse_updates_line);
+  let updates = updates_binding
+    .lines()
+    .map(parse_updates_line)
+    .collect::<Vec<_>>();
 
-  let result: usize = updates
+  let result_1: usize = updates
+    .iter()
     .filter_map(|line| {
-      let mut middle_page = Some(*line.get((line.len() - 1) / 2)?);
+      let mut middle_page = Some(line[(line.len() - 1) / 2]);
       for (i, page) in line.iter().enumerate() {
         let cant_be_before_page = match rules_grouping.get(page) {
           Some(x) => x,
@@ -38,7 +42,57 @@ fn main() {
       middle_page
     })
     .sum();
-  dbg!(result);
+  dbg!(result_1);
+
+  // Part 2
+  let result_2: usize = updates
+    .iter()
+    .filter(|line| {
+      let mut filter = false;
+      for (i, page) in line.iter().enumerate() {
+        let cant_be_before_page = match rules_grouping.get(page) {
+          Some(x) => x,
+          None => {
+            continue;
+          }
+        };
+        if *(&line[..i]
+          .iter()
+          .any(|other_page| cant_be_before_page.contains(other_page)))
+        {
+          filter = true
+        }
+      }
+      filter
+    })
+    .map(|wrong_update| {
+      let mut new_update: Vec<usize> = vec![];
+      for page in wrong_update.iter() {
+        let cant_be_before_page = match rules_grouping.get(page) {
+          Some(x) => x,
+          None => {
+            new_update.push(*page);
+            continue;
+          }
+        };
+
+        if new_update.len() == 0 {
+          new_update.push(*page);
+        } else {
+          for (i, new_page) in new_update.iter().enumerate() {
+            if cant_be_before_page.contains(new_page) == true {
+              new_update.insert(i, *page);
+              break;
+            } else if i + 1 == new_update.len() {
+              new_update.push(*page);
+              break;
+            }
+          }
+        }
+      }
+      new_update[(new_update.len() - 1) / 2]
+    }).sum();
+  dbg!(result_2);
 }
 
 fn parse_rules_line(line: &str) -> (usize, usize) {
