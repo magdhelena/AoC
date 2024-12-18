@@ -78,21 +78,27 @@ fn main() {
         if new_update.len() == 0 {
           new_update.push(*page);
         } else {
-          for (i, new_page) in new_update.iter().enumerate() {
-            if cant_be_before_page.contains(new_page) {
-              new_update.insert(i, *page);
-              break;
-            } else if i + 1 == new_update.len() {
-              new_update.push(*page);
-              break;
-            }
-          }
+          insert_into_sorted_spot(&mut new_update, page, cant_be_before_page);
         }
       }
       new_update[(new_update.len() - 1) / 2]
     })
     .sum();
   dbg!(result_2);
+}
+
+fn insert_into_sorted_spot(
+  new_update: &mut Vec<usize>,
+  page: &usize,
+  cant_be_before_page: &Vec<usize>,
+) {
+  for (i, new_page) in new_update.iter().enumerate() {
+    if cant_be_before_page.contains(new_page) {
+      new_update.insert(i, *page);
+      return;
+    }
+  }
+  new_update.push(*page);
 }
 
 fn parse_rules_line(line: &str) -> (usize, usize) {
