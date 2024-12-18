@@ -66,15 +66,9 @@ fn main() {
     })
     .map(|wrong_update| {
       let mut new_update: Vec<usize> = vec![];
-      for page in wrong_update.iter() {
-        let cant_be_before_page = match rules_grouping.get(page) {
-          Some(x) => x,
-          None => {
-            new_update.push(*page);
-            continue;
-          }
-        };
-
+      for &page in wrong_update.iter() {
+        let empty_vec = &vec![];
+        let cant_be_before_page = rules_grouping.get(&page).unwrap_or(empty_vec);
         insert_into_sorted_spot(&mut new_update, page, cant_be_before_page);
       }
       new_update[(new_update.len() - 1) / 2]
@@ -85,15 +79,15 @@ fn main() {
 
 fn insert_into_sorted_spot(
   new_update: &mut Vec<usize>,
-  page: &usize,
+  page: usize,
   cant_be_before_page: &Vec<usize>,
 ) {
   match new_update
     .iter()
     .position(|new_page| cant_be_before_page.contains(new_page))
   {
-    Some(i) => new_update.insert(i, *page),
-    None => new_update.push(*page),
+    Some(i) => new_update.insert(i, page),
+    None => new_update.push(page),
   }
 }
 
