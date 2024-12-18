@@ -100,7 +100,7 @@ fn get_next_letter(
 fn get_surrounding_corners(
   line_index: usize,
   char_index: usize,
-  lines: &Vec<Vec<char>>
+  lines: &Vec<Vec<char>>,
 ) -> Vec<char> {
   let surrounding_letters = [(-1, 1), (1, 1), (-1, -1), (1, -1)]
     .iter()
