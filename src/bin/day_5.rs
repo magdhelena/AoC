@@ -48,7 +48,6 @@ fn main() {
   let result_2: usize = updates
     .iter()
     .filter(|line| {
-      let mut filter = false;
       for (i, page) in line.iter().enumerate() {
         let cant_be_before_page = match rules_grouping.get(page) {
           Some(x) => x,
@@ -60,10 +59,10 @@ fn main() {
           .iter()
           .any(|other_page| cant_be_before_page.contains(other_page)))
         {
-          filter = true
+          return true;
         }
       }
-      filter
+      false
     })
     .map(|wrong_update| {
       let mut new_update: Vec<usize> = vec![];
@@ -80,7 +79,7 @@ fn main() {
           new_update.push(*page);
         } else {
           for (i, new_page) in new_update.iter().enumerate() {
-            if cant_be_before_page.contains(new_page) == true {
+            if cant_be_before_page.contains(new_page) {
               new_update.insert(i, *page);
               break;
             } else if i + 1 == new_update.len() {
@@ -91,7 +90,8 @@ fn main() {
         }
       }
       new_update[(new_update.len() - 1) / 2]
-    }).sum();
+    })
+    .sum();
   dbg!(result_2);
 }
 
