@@ -75,11 +75,7 @@ fn main() {
           }
         };
 
-        if new_update.len() == 0 {
-          new_update.push(*page);
-        } else {
-          insert_into_sorted_spot(&mut new_update, page, cant_be_before_page);
-        }
+        insert_into_sorted_spot(&mut new_update, page, cant_be_before_page);
       }
       new_update[(new_update.len() - 1) / 2]
     })
@@ -92,13 +88,13 @@ fn insert_into_sorted_spot(
   page: &usize,
   cant_be_before_page: &Vec<usize>,
 ) {
-  for (i, new_page) in new_update.iter().enumerate() {
-    if cant_be_before_page.contains(new_page) {
-      new_update.insert(i, *page);
-      return;
-    }
+  match new_update
+    .iter()
+    .position(|new_page| cant_be_before_page.contains(new_page))
+  {
+    Some(i) => new_update.insert(i, *page),
+    None => new_update.push(*page),
   }
-  new_update.push(*page);
 }
 
 fn parse_rules_line(line: &str) -> (usize, usize) {
